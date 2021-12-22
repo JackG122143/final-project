@@ -42,6 +42,10 @@ sprites.onCreated(SpriteKind.Enemy, function (sprite) {
     mySprite.y = randint(30, 60)
     sprite.setVelocity(-40, 0)
 })
+controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
+    controller.moveSprite(mySprite)
+    mySprite.vy = 50
+})
 controller.anyButton.onEvent(ControllerButtonEvent.Pressed, function () {
     mySprite.vy += -50
 })
