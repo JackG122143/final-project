@@ -42,30 +42,24 @@ sprites.onCreated(SpriteKind.Enemy, function (sprite) {
     mySprite.y = randint(30, 60)
     sprite.setVelocity(-40, 0)
 })
-controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
-    controller.moveSprite(mySprite)
-    mySprite.vy = 50
-})
 controller.anyButton.onEvent(ControllerButtonEvent.Pressed, function () {
     mySprite.vy += -50
+    game.splash(text_list._pickRandom())
 })
-function die_on_ground () {
-    if (mySprite.y > 95) {
-        mySprite.destroy()
-    }
-    if (mySprite.y < 1) {
-        mySprite.destroy()
+function checkOutOfBounds () {
+    if (mySprite.y > 95 || mySprite.y < 1) {
+        gameOver()
     }
 }
-sprites.onDestroyed(SpriteKind.Player, function (sprite) {
-    mySprite.startEffect(effects.disintegrate, 200)
-    pause(500)
-    game.splash("Game Over", info.score())
-})
+function gameOver () {
+    pause(200)
+    mySprite.destroy()
+    game.over(false, effects.dissolve)
+}
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
-    sprite.startEffect(effects.disintegrate, 200)
-    sprite.destroy()
+    gameOver()
 })
+let text_list: string[] = []
 let mySprite: Sprite = null
 let name = game.askForString("What is your name")
 scene.setBackgroundImage(img`
@@ -549,6 +543,7 @@ let mySprite2 = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
     `, SpriteKind.star)
+text_list = ["tweet", "Try Again", "Your bad"]
 game.onUpdate(function () {
     if (pipe.x < 0) {
         pipe.setPosition(175, randint(30, 60))
@@ -560,7 +555,7 @@ game.onUpdate(function () {
         info.changeScoreBy(5)
         pipe_2.vx += -1
     }
-    die_on_ground()
+    checkOutOfBounds()
     if (info.score() > 20) {
         scene.setBackgroundImage(img`
             5555555555555555555555555544444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444
@@ -685,8 +680,6 @@ game.onUpdate(function () {
             cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
             `)
     }
-})
-game.onUpdate(function () {
     mySprite.vy += 1
 })
 game.onUpdateInterval(50, function () {
