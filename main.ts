@@ -42,9 +42,12 @@ sprites.onCreated(SpriteKind.Enemy, function (sprite) {
     mySprite.y = randint(30, 60)
     sprite.setVelocity(-40, 0)
 })
-controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
+function Cheats () {
     controller.moveSprite(mySprite)
     mySprite.setFlag(SpriteFlag.GhostThroughSprites, true)
+}
+controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
+    Cheats()
 })
 controller.anyButton.onEvent(ControllerButtonEvent.Pressed, function () {
     mySprite.vy += -50
